@@ -80,10 +80,10 @@ RCT_EXPORT_METHOD(seek:(float)seconds) {
 RCT_EXPORT_METHOD(setSpeaker:(BOOL) on) {
     AVAudioSession *session = [AVAudioSession sharedInstance];
     if (on) {
-        [session setCategory: AVAudioSessionCategoryPlayAndRecord error: nil];
+        [session setCategory: AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers error: nil];
         [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
     } else {
-        [session setCategory: AVAudioSessionCategoryPlayback error: nil];
+        [session setCategory: AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionMixWithOthers error: nil];
         [session overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
     }
     [session setActive:true error:nil];
@@ -148,6 +148,7 @@ RCT_REMAP_METHOD(getInfo,
     [self.player prepareToPlay];
     [[AVAudioSession sharedInstance]
             setCategory: AVAudioSessionCategoryPlayback
+            withOptions:AVAudioSessionCategoryOptionMixWithOthers
             error: nil];
     [self sendEventWithName:EVENT_FINISHED_LOADING body:@{@"success": [NSNumber numberWithBool:true]}];
     [self sendEventWithName:EVENT_FINISHED_LOADING_FILE body:@{@"success": [NSNumber numberWithBool:true], @"name": name, @"type": type}];
